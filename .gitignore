@@ -8,3 +8,9 @@ Obj
 *.userprefs
 *.swp
 *.csproj
+#Standard Assets (for Unity 2018.4)
+Standard Assets/
+SampleScenes/
+#SDユニティちゃん 3Dモデルデータ
+UnityChan/
+README_SD_UnityChan.txt
