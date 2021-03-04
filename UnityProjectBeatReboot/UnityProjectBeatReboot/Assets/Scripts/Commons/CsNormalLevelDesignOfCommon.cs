@@ -20,5 +20,9 @@ namespace Commons
         /// 移動（左スティック）のHorizontal
         /// </summary>
         public static readonly string LEFT_VERTICAL = "Vertical";
+        /// <summary>
+        /// ユニティちゃんオブジェクト
+        /// </summary>
+        public static readonly string GAMEOBJECT_NAME_UNITYCHAN = "SD_unitychan_humanoid";
     }
 }
