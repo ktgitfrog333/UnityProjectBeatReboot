@@ -15,6 +15,8 @@ public class ScCharacterController : MonoBehaviour
     [SerializeField] private Animator _animator;
     /// <summary>プレイヤー移動のコントローラー</summary>
     [SerializeField] private CharacterController _characterController;
+    /// <summary>プレイヤー操作フラグ</summary>
+    public bool _playerControllerFlag { get; set; } = true;
 
     /// <summary>移動速度</summary>
     [SerializeField] private float _moveSpeed = 3f;
@@ -33,6 +35,11 @@ public class ScCharacterController : MonoBehaviour
     /// <summary>カメラの正面補正</summary>
     private Vector3 _mainCameraForward;
 
+    /// <summary>メソッドが実行中フラグ</summary>
+    private bool _sleepTimeFlag;
+    /// <summary>処理を止めるフラグ</summary>
+    private bool _coroutineStoper;
+
     void Start()
     {
         _transform = transform;
@@ -46,7 +53,83 @@ public class ScCharacterController : MonoBehaviour
 
     void Update()
     {
-        CharacterMovement();
+        if (_playerControllerFlag == true)
+        {
+            CharacterMovement();
+        }
+    }
+
+    /// <summary>
+    /// プレイヤーをある場所まで歩かせる
+    /// </summary>
+    /// <param name="target">ターゲット</param>
+    /// <returns></returns>
+    public IEnumerator CharacterWalkInPlace(GameObject trigger)
+    {
+        yield return null;
+        Transform target = trigger.transform;
+        Vector3 targetPosition = new Vector3();
+        _playerControllerFlag = false;
+
+        targetPosition += (target.position - transform.position) * _moveSpeed;
+        targetPosition *= 0.3f;
+
+        // 移動ロジック一部踏襲
+        _moveVelocity.x = targetPosition.x;
+        _moveVelocity.z = targetPosition.z;
+
+        MoveAndAnimation();
+
+        if (_sleepTimeFlag == false)
+        {
+            _sleepTimeFlag = true;
+            StartCoroutine(SleepTime(300f));
+        }
+        if (_coroutineStoper == true)
+        {
+            _moveVelocity = Vector3.zero;
+
+            MoveAndAnimation();
+
+            _transform.position = target.position;
+            _transform.eulerAngles = target.rotation.eulerAngles;
+
+            trigger.GetComponent<ScPlayedTrigger>().StopPlayerAndStartProductionMovie();
+
+            StopCoroutine(CharacterWalkInPlace(trigger));
+        }
+        else
+        {
+            StartCoroutine(CharacterWalkInPlace(trigger));
+        }
+    }
+
+    /// <summary>
+    /// キャラクターを動かす
+    /// </summary>
+    private void MoveAndAnimation()
+    {
+        // 移動方向に向く
+        _transform.LookAt(_transform.position + new Vector3(_moveVelocity.x, 0, _moveVelocity.z));
+
+        // オブジェクトを動かす
+        _characterController.Move(_moveVelocity * Time.deltaTime);
+
+        // 移動スピードをanimatorに反映
+        _movedSpeedToAnimator = new Vector3(_moveVelocity.x, 0, _moveVelocity.z).magnitude;
+        _animator.SetFloat("MoveSpeed", _movedSpeedToAnimator);
+    }
+
+    /// <summary>
+    /// 実行を止める
+    /// </summary>
+    /// <param name="time">停止時間（ミリ秒）</param>
+    /// <returns></returns>
+    private IEnumerator SleepTime(float time)
+    {
+        yield return new WaitForSeconds(time * Time.deltaTime);
+        _coroutineStoper = true;
+        StopCoroutine(SleepTime(time));
     }
 
     /// <summary>
@@ -86,16 +169,7 @@ public class ScCharacterController : MonoBehaviour
             _moveVelocity = _moveVelocity.z * Vector3.forward + _moveVelocity.x * Vector3.right;
         }
 
-        // 移動方向に向く
-        _transform.LookAt(_transform.position + new Vector3(_moveVelocity.x, 0, _moveVelocity.z));
-
-        // オブジェクトを動かす
-        _characterController.Move(_moveVelocity * Time.deltaTime);
-
-        _movedSpeedToAnimator = new Vector3(_moveVelocity.x, 0, _moveVelocity.z).magnitude;
-
-        // 移動スピードをanimatorに反映
-        _animator.SetFloat("MoveSpeed", _movedSpeedToAnimator);
+        MoveAndAnimation();
     }
 
     /// <summary>

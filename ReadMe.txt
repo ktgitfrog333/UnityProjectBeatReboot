@@ -1,3 +1,26 @@
+2021/03/20 21:00
+★演奏トリガーに触れると演奏開始カメラ演出
+・ゲームステージ画面にて、演出カメラ設置など
+Assets\Scenes\02_Stage001.unity
+・プレイヤー自動移動ロジック追加と操作ロジックの一部修正
+Assets\Scripts\ScCharacterController.cs
+・トリガー処理後に演奏開始カットシーンの起動とFTP視点へ切り替え
+Assets\Scripts\ScPlayedTrigger.cs
+・演奏開始アニメーション
+Assets\Animations\StartPlaying_Cut1.anim
+Assets\Animations\StartPlaying_Cut1.controller
+Assets\Animations\StartPlaying_Cut2.anim
+Assets\Animations\StartPlaying_Cut2.controller
+Assets\Animations\StartPlaying_Cut3.anim
+Assets\Animations\StartPlaying_Cut3.controller
+Assets\Animations\StartPlaying_Cut4.anim
+Assets\Animations\StartPlaying_Cut4.controller
+・トリガーのプレハブを作成
+Assets\Prefabs\PlayedTrigger.prefab
+・演奏開始カットシーンを作成
+Assets\Timelines\StartPlayingDirect.playable
+ProjectSettings\TimelineSettings.asset
+
 2021/03/06 15:37
 ★プレイヤーの移動ロジック修正と視点切り替え
 ・プレイヤー移動アニメーションを調整
