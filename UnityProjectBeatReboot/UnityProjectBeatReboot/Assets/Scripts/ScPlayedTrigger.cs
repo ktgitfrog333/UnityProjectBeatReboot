@@ -20,8 +20,10 @@ public class ScPlayedTrigger : MonoBehaviour
     [SerializeField] private GameObject _startPlayCamera;
     /// <summary>演奏開始カットシーン</summary>
     [SerializeField] private GameObject _startPlayCut;
-
-    [SerializeField] private GameObject _targetObject;
+    /// <summary>蝶グループオブジェクト</summary>
+    [SerializeField] private GameObject _ageha;
+    /// <summary>蝶グループ位置</summary>
+    [SerializeField] private ScAgehaOffSet _agehaPositions;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -43,10 +45,14 @@ public class ScPlayedTrigger : MonoBehaviour
         _playerMainCamera.SetActive(false);
         _startPlayCamera.SetActive(true);
         _startPlayCut.SetActive(true);
+        _ageha.SetActive(true);
         _startPlayFlag = false;
         if (_startPlayCut.activeSelf == true)
         {
             var playable = _startPlayCut.GetComponent<PlayableDirector>();
+            var timelineTrack = _startPlayCut.GetComponent<ScTimelineTrackProperty>();
+            timelineTrack._agehaPositions = _agehaPositions;
+            timelineTrack.AgehaPositionOffSet();
             StartCoroutine(RuningStatusForCinematicCamera(playable));
         }
     }
@@ -69,6 +75,7 @@ public class ScPlayedTrigger : MonoBehaviour
             _controller.EnableFPS();
             _startPlayCamera.SetActive(false);
             _startPlayCut.SetActive(false);
+            _ageha.SetActive(false);
             _startPlayFlag = true;
             _player.GetComponent<ScCharacterController>()._playerControllerFlag = true;
             StopCoroutine(RuningStatusForCinematicCamera(playable));

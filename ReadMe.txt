@@ -1,3 +1,20 @@
+2021/04/02 21:07
+★演奏開始モーションにて演奏開始仮モーション実装とパーティクル演出追加
+・蝶オブジェクトとパーティクルオブジェクトを追加など
+Assets\Scenes\02_Stage001.unity
+・蝶のグループオブジェクトの有効無効切り替えと位置調整
+Assets\Scripts\ScPlayedTrigger.cs
+・カットシーンへアニメーショントラック制御スクリプトを追加
+Assets\Timelines\StartPlayingDirect.playable
+・蝶パーティクルのプレハブを作成
+Assets\Prefabs\SoulArchive.prefab
+・蝶位置のオフセット調整オブジェクトを作成
+Assets\Scripts\ScAgehaOffSet.cs
+・蝶カットシーンのトラック開始オフセット調整スクリプトを作成
+Assets\Scripts\ScTimelineTrackProperty.cs
+・パーティクル追加（URP）
+ProjectSettings\URPProjectSettings.asset
+
 2021/03/20 21:00
 ★演奏トリガーに触れると演奏開始カメラ演出
 ・ゲームステージ画面にて、演出カメラ設置など
